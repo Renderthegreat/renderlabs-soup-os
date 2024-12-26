@@ -16,7 +16,6 @@ namespace OS {
         };
     };
     export namespace IO {
-        export Display: DisplayPort = new DisplayPort();
         export class DisplayPort {
             constructor() {
                 this.console = textsprite.create("");
@@ -40,6 +39,7 @@ namespace OS {
         export class NetworkPort {
 
         };
+        export const Display: DisplayPort = new DisplayPort();
     };
     export namespace Filesystem {
         export class Meta {
@@ -62,4 +62,4 @@ namespace OS {
     };
 };
 
-OS.BackgroundStartup();
+OS.BackgroundSetup();
