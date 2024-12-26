@@ -1,5 +1,5 @@
 /* 
- * SOUP OS
+ * SOUP OS Kernel
  */
 
 namespace OS {
