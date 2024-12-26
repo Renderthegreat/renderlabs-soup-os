@@ -16,6 +16,9 @@ namespace OS {
         export class Memory {
 
         };
+        export class Network {
+
+        };
     };
     export namespace Filesystem {
         export class Node {
@@ -31,7 +34,8 @@ namespace OS {
 
                 };
             };
-            type: typeof keyof Node.NodeType;
+            
+            nodeType: OS.Filesystem.Node.NodeType;
         };
     };
 };
