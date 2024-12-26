@@ -12,7 +12,7 @@ namespace OS {
     };
     export namespace Debug {
         export function print(message: string) {
-            
+            IO.Display.print(message);
         };
     };
     export namespace IO {
