@@ -7,7 +7,7 @@ namespace OS {
         timer.background(OS.Startup);
     };
     export function Startup() {
-        scene.setBackgroundColor(0);
+        scene.setBackgroundColor(100);
         Debug.print("Welcome to SOUP OS!\n");
         music.playMelody("A G D B D B", 120)
     };
@@ -21,6 +21,7 @@ namespace OS {
             constructor() {
                 this.console = textsprite.create("");
                 this.consoleText = "";
+                textsprite.setPosition(0,0);
             };
             print(message: string) {
                 this.consoleText += message;
