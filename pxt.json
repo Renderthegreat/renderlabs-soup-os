@@ -2,7 +2,7 @@
     "name": "Renderlabs Soup OS",
     "description": "",
     "dependencies": {
-        "device": "*",
+        "device": "1.0.3",
         "arcade-text": "github:microsoft/arcade-text#v1.3.0",
         "Timers": "github:microsoft/arcade-timers#v1.1.0",
         "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0"
