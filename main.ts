@@ -24,11 +24,12 @@ namespace OS {
                 Folder: 'FOLDER',
             };
             static Meta = class Meta {
-                function add(label: string, value: string) {
-                    
-                };
+                constructor();
+                function set(propery: string, value: string) {
+
+                }
             };
-            type: typeof Node.NodeType[keyof typeof Node.NodeType];
+            type: Filesystem.Node.NodeType;
         };
     };
 };
