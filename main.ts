@@ -7,10 +7,13 @@ namespace OS {
         timer.background(OS.Startup);
     };
     export function Startup() {
+        function jingle() {
+            music.playMelody("A A G B G D", 180);
+        };
         scene.setBackgroundColor(0);
         Debug.print("Welcome to SOUP OS!\n");
-        music.playMelody("A A G B G D", 180)
         Debug.print("Reading Filesystem...\n");
+        timer.background(jingle);
     };
     export namespace Debug {
         export function print(message: string) {
