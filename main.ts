@@ -12,11 +12,12 @@ namespace OS {
     };
     export namespace Debug {
         export function print(message: string) {
-            IO.Display.print(message);
+            OS.IO.Display.print(message);
         };
     };
     export namespace IO {
-        export class Display {
+        export Display: DisplayPort = new DisplayPort();
+        export class DisplayPort {
             constructor() {
                 this.console = textsprite.create("");
                 this.consoleText = "";
@@ -33,10 +34,10 @@ namespace OS {
             console: any;
             consoleText: string;
         };
-        export class Memory {
+        export class MemoryPort {
 
         };
-        export class Network {
+        export class NetworkPort {
 
         };
     };
