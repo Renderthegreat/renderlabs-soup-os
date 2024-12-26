@@ -21,21 +21,22 @@ namespace OS {
         };
     };
     export namespace Filesystem {
-        export class Node {
-            static NodeType = {
-                File: 'FILE',
-                Folder: 'FOLDER',
-            } as const;
-            static Meta = class Meta {
+        export class Meta {
                 constructor() {
 
                 };
                 set(propery: string, value: string) {
-
-                };
             };
-            
-            nodeType: OS.Filesystem.Node.NodeType;
+        };
+        export class File {
+            constructor(name: string) {
+                
+            };
+        };
+        export class Folder {
+            constructor(name: string) {
+                
+            };
         };
     };
 };
