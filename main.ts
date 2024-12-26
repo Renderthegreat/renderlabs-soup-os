@@ -24,10 +24,12 @@ namespace OS {
                 Folder: 'FOLDER',
             };
             static Meta = class Meta {
-                constructor();
-                function set(propery: string, value: string) {
+                constructor() {
 
-                }
+                };
+                set(propery: string, value: string) {
+
+                };
             };
             type: Filesystem.Node.NodeType;
         };
