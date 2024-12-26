@@ -25,9 +25,11 @@ namespace OS {
             };
             print(message: string) {
                 this.consoleText += message;
+                this.update();
             };
             clear() {
                 this.consoleText = "";
+                this.update();
             };
             update() {
                 this.console.setText(this.consoleText);
