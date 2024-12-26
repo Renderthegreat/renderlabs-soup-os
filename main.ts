@@ -21,7 +21,7 @@ namespace OS {
             constructor() {
                 this.console = textsprite.create("");
                 this.consoleText = "";
-                textsprite.setPosition(0,0);
+                this.console.setPosition(0,0);
             };
             print(message: string) {
                 this.consoleText += message;
