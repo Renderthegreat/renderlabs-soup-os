@@ -10,6 +10,7 @@ namespace OS {
         scene.setBackgroundColor(0);
         Debug.print("Welcome to SOUP OS!\n");
         music.playMelody("A A G B G D", 180)
+        Debug.print("Reading Filesystem...\n");
     };
     export namespace Debug {
         export function print(message: string) {
@@ -19,9 +20,9 @@ namespace OS {
     export namespace IO {
         export class DisplayPort {
             constructor() {
-                this.console = textsprite.create("", 0, 200);
+                this.console = textsprite.create("", 0, 1);
                 this.consoleText = "";
-                this.console.setPosition(0,0);
+                this.console.setPosition(5,10);
             };
             print(message: string) {
                 this.consoleText += message;
