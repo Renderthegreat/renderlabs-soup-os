@@ -1,7 +1,7 @@
 makecode:
   target: arcade
-  platform: arcade
-  home_url: https://github.com/Ovobot/pxt-xtronpro
+  platform: 
+  home_url: 
 theme: jekyll-theme-slate
 include:
   - assets

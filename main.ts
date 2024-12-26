@@ -72,6 +72,9 @@ namespace OS {
                 
             };
         };
+        export function init() {
+            return "success";
+        };
     };
 };
 
