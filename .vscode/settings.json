@@ -7,7 +7,7 @@
         "**/node_modules/**": true,
         "**/yotta_modules/**": true,
         "**/yotta_targets": true,
-        "**/pxt_modules/**": true,
+        "**/pxt_modules/**": false,
         "**/.pxt/**": true
     },
     "files.associations": {

@@ -11,7 +11,7 @@ namespace OS {
             music.playMelody("A A G B G D", 180);
         };
         scene.setBackgroundColor(0);
-        Debug.print("Welcome to SOUP OS!\n");
+        Debug.print("Welcome to SOUP OS!");
         timer.background(jingle);
         Debug.print("Reading Filesystem...\n");
         let fsStatus: string = OS.Filesystem.init();
