@@ -12,8 +12,13 @@ namespace OS {
         };
         scene.setBackgroundColor(0);
         Debug.print("Welcome to SOUP OS!\n");
-        Debug.print("Reading Filesystem...\n");
         timer.background(jingle);
+        Debug.print("Reading Filesystem...\n");
+        let fsStatus: string = OS.Filesystem.init();
+        if (fsStatus == 'fail') {
+            Debug.print("Reading Filesystem failed!\n");
+            Debug.print("Please read the manual on how to fix this.\n");
+        };
     };
     export namespace Debug {
         export function print(message: string) {
