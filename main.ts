@@ -7,9 +7,9 @@ namespace OS {
         timer.background(OS.Startup);
     };
     export function Startup() {
-        scene.setBackgroundColor(100);
+        scene.setBackgroundColor(0);
         Debug.print("Welcome to SOUP OS!\n");
-        music.playMelody("A G D B D B", 120)
+        music.playMelody("A A G B G D", 180)
     };
     export namespace Debug {
         export function print(message: string) {
@@ -19,7 +19,7 @@ namespace OS {
     export namespace IO {
         export class DisplayPort {
             constructor() {
-                this.console = textsprite.create("");
+                this.console = textsprite.create("", 0, 200);
                 this.consoleText = "";
                 this.console.setPosition(0,0);
             };
