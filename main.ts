@@ -9,6 +9,7 @@ namespace OS {
     export function Startup() {
         scene.setBackgroundColor(0);
         Debug.print("Welcome to SOUP OS!\n");
+        music.playMelody("A G D B", 120)
     };
     export namespace Debug {
         export function print(message: string) {
