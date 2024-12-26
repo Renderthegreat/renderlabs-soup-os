@@ -30,6 +30,8 @@ namespace OS {
             update() {
                 this.console.setText(this.consoleText);
             };
+            console: any;
+            consoleText: string;
         };
         export class Memory {
 
@@ -58,3 +60,5 @@ namespace OS {
         };
     };
 };
+
+OS.BackgroundStartup();
