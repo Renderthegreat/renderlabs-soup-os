@@ -8,10 +8,28 @@ namespace OS {
     };
     export function Startup() {
         scene.setBackgroundColor(0);
+        Debug.print("Welcome to SOUP OS!\n");
+    };
+    export namespace Debug {
+        export function print(message: string) {
+            
+        };
     };
     export namespace IO {
         export class Display {
-            
+            constructor() {
+                this.console = textsprite.create("");
+                this.consoleText = "";
+            };
+            print(message: string) {
+                this.consoleText += message;
+            };
+            clear() {
+                this.consoleText = "";
+            };
+            update() {
+                this.console.setText(this.consoleText);
+            };
         };
         export class Memory {
 
