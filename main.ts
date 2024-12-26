@@ -22,7 +22,7 @@ namespace OS {
             static NodeType = {
                 File: 'FILE',
                 Folder: 'FOLDER',
-            };
+            } as const;
             static Meta = class Meta {
                 constructor() {
 
@@ -31,7 +31,7 @@ namespace OS {
 
                 };
             };
-            type: Filesystem.Node.NodeType;
+            type: typeof keyof Node.NodeType;
         };
     };
 };
