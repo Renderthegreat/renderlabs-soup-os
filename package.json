@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "pxt": "^0.5.1",
-    "pxt-arcade": "^1.12.58"
+    "pxt-arcade": "^1.13.62",
+    "pxt-microbit": "^7.1.20",
+    "rp2040js": "^1.0.1"
   }
 }
