@@ -754,9 +754,9 @@ namespace newsp32 {
         const reset = pins.pinByCfg(DAL.CFG_PIN_WIFI_RESET);
         const gpio0 = pins.pinByCfg(DAL.CFG_PIN_WIFI_GPIO0);
         if (!!cs) {
-            const mosi = pins.pinByCfg(DAL.CFG_PIN_MOSI) || pins.pinByCfg(Math.floor(Math.random() * 36) + 1);
-            const miso = pins.pinByCfg(DAL.CFG_PIN_MISO) || pins.pinByCfg(Math.floor(Math.random() * 36) + 1);
-            const sck = pins.pinByCfg(DAL.CFG_PIN_SCK) || pins.pinByCfg(Math.floor(Math.random() * 36) + 1);
+            const mosi = pins.pinByCfg(DAL.CFG_PIN_MOSI);
+            const miso = pins.pinByCfg(DAL.CFG_PIN_MISO);
+            const sck = pins.pinByCfg(DAL.CFG_PIN_SCK);
             if (!pins.pinByCfg(DAL.CFG_PIN_MOSI)) {
                 OS.Debug.success("Falling back to MOSI for CFG_PIN_MOSI");
             }
