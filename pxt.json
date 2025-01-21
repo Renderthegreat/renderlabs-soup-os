@@ -7,31 +7,32 @@
         "controller": "*",
         "core": "*",
         "net": "*",
-        "net-game": "*",
         "mixer": "*",
         "esp32": "1.3.8",
-        "jacdac": "github:microsoft/pxt-jacdac#v1.8.13",
+        "edge-connector": "*",
         "arcade-text": "github:microsoft/arcade-text#v1.3.0",
         "arcade-fancy-text": "github:riknoll/arcade-fancy-text#v0.1.1",
         "pxt-arcade-databse": "github:renderthegreat/pxt-arcade-database",
         "Timers": "github:microsoft/arcade-timers#v1.1.0",
         "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
-        "arcade-mini-menu": "github:riknoll/arcade-mini-menu#v0.0.1",
-        "hw---stm32f401": "*"
+        "arcade-mini-menu": "github:riknoll/arcade-mini-menu#v0.0.1"
     },
     "files": [
         "kernel.ts",
         "distro/distro.ts",
         "distro/interface.ts",
         "distro/net/nina.ts",
+        "distro/net/net.ts",
+        "distro/net/jack.ts",
+        "distro/out/led.ts",
+        "distro/out/card.ts",
+        "distro/lib/interface.ts",
         "README.md",
         "assets.json",
         "tilemap.g.jres",
         "tilemap.g.ts"
     ],
-    "testFiles": [
-        "test.ts"
-    ],
+    "testFiles": [],
     "targetVersions": {
         "target": "1.3.8"
     },

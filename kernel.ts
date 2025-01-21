@@ -42,6 +42,22 @@ namespace OS {
         };
         return output;
     };
+    /*export function rexec(regex: RegExp, str: string): RegExpExecArray {
+        const matches: string[] = [];
+        let lastIndex = 0;
+    
+        while (lastIndex < str.length) {
+            const substring = str.slice(lastIndex);
+            if (regex.test(substring)) {
+                const match = substring.match(regex)[0] || "";
+                matches.push(match);
+                lastIndex += substring.indexOf(match) + match.length;
+            } else {
+                break;
+            };
+        };
+        return matches as RegExpExecArray;
+    };*/
     export namespace Debug {
         export function print(message: string) {
             OS.IO.Display.print(message);
@@ -62,11 +78,17 @@ namespace OS {
             OS.Debug.debug(message);
             pause(300);
         };
+        export function IODebug(message: string) {
+            OS.IO.Display.print("[ <purple>DG</purple> ]  " + message + '\n');
+            pause(30);
+        };
         export function log(message: string) {
             OS.IO.Display.print(message + '\n');
         };
         export function panic(message: string) {
             OS.IO.Display.print("Kernel Panic :(" + '\n' + "Error:" + '\n' + message + '\n');
+            OS.IO.Display.show();
+            API.onPanic();
             pause(8000);
             game.reset();
         };
@@ -125,6 +147,12 @@ namespace OS {
             clear() {
                 this.consoleText = "";
                 this.update();
+            };
+            hide() {
+                this.console.setPosition(1000, 0);
+            };
+            show() {
+                this.console.setPosition(5, 10);
             };
             update() {
                 let lines = this.consoleText.split('\n');
@@ -203,14 +231,6 @@ namespace OS {
             };
             blockFactory: BlockFactory;
         };
-        export class NetworkPort {
-
-        };
-        export class TimePort {
-            unix() {
-                return 0;
-            };
-        };
         export class MicrophonePort {
             constructor() { };
             listen() {
@@ -222,7 +242,6 @@ namespace OS {
         };
         export const Display: DisplayPort = new DisplayPort();
         export const Memory: MemoryPort = new MemoryPort();
-        export const Time: TimePort = new TimePort();
     };
     export namespace Filesystem {
         export namespace Path {
@@ -417,5 +436,9 @@ namespace API {
             export const Right = controller.right;
             export const Menu = controller.menu;
         };
+    };
+
+    export let onPanic = () => {
+
     };
 };

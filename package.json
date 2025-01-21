@@ -2,6 +2,7 @@
   "dependencies": {
     "pxt": "^0.5.1",
     "pxt-arcade": "^1.13.62",
+    "pxt-core": "^11.2.33",
     "pxt-microbit": "^7.1.20",
     "rp2040js": "^1.0.1"
   }

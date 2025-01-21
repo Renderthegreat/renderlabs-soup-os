@@ -1,4 +1,4 @@
-namespace Interface {
+namespace XInterface {
     export class Window {
         title: string;
         protected elements: StyledElement[] = [];
@@ -10,9 +10,13 @@ namespace Interface {
         constructor(title: string) {
             this.title = title || "Untitled Window";
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (!this.elements[this.selected]) {
+                    this.selected = 0;
+                    return;
+                }
                 const input = this.elements[this.selected].getInput();
                 this.elements[this.selected].onClick(input, this.elements[this.selected].textSprite);
-                music.playMelody("F#", 360);
+                music.playMelody("G#", 360);
             });
             controller.anyButton.onEvent(ControllerButtonEvent.Pressed, () => {
                 for (let e of this.elements) {
@@ -139,7 +143,7 @@ namespace Interface {
          */
         private handleScrolling() {
             let totalHeight = 0;
-            const refresh = () => {
+            const update = () => {
                 totalHeight = 0;
                 for (let e of this.elements) {
                     totalHeight += e.sprite.height + e.style.height;
@@ -147,7 +151,7 @@ namespace Interface {
             };
 
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                refresh();
+                update();
                 const scrollHeight = this.scrollOffsetY + this.maxHeight;
                 if (scrollHeight < totalHeight) {
                     this.scrollOffsetY -= 10;
@@ -159,7 +163,7 @@ namespace Interface {
             });
 
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                refresh();
+                update();
                 if (this.scrollOffsetY < 0) {
                     this.scrollOffsetY += 10;
                     if (this.scrollOffsetY > 0) {
@@ -171,6 +175,15 @@ namespace Interface {
                     this.selected--;
                 };
             });
+            /*controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+                refresh();
+                this.elements[this.selected].textSprite.x -= 10;
+            });
+
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+                refresh();
+                this.elements[this.selected].textSprite.x += 10;
+            });*/
         };
 
         /**
@@ -199,6 +212,7 @@ namespace Interface {
             };
             this.elements = [];
             this.scrollOffsetY = 0;
+            this.handleScrolling();
         };
     };
 

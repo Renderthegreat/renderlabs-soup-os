@@ -781,15 +781,14 @@ namespace newsp32 {
             let spi: SPI = pins.createSPI(mosi, miso, sck);
             if (!busy || !reset) {
                 OS.Debug.warn("newsp32 can work \n without these pins \n with SPI :)");
-                pause(2000);
             };
             if (spi)
                 return _defaultController = new NinaController(spi, cs, busy, reset, gpio0);
             OS.Debug.fail("newsp32 no spi")
-            pause(2000);
         } else if (!cs && !busy && !reset) {
             OS.Debug.fail("newsp32 pins");
-            pause(2000);
+            OS.Debug.run("Using JACK");
+            return null;
         } else {
             OS.Debug.fail("newsp32 partial");
             OS.Debug.fail("Missing:")
@@ -802,7 +801,6 @@ namespace newsp32 {
             if (!reset) {
                 OS.Debug.fail("RESET")
             };
-            pause(2000);
             OS.Debug.run("Scanning...");
             for (let i = 82; i < 93; i++) {
                 try {
