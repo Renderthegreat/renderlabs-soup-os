@@ -4,6 +4,11 @@
 
 namespace Lib.Interface {
     type Styles = { [key: string]: string };
+    export enum PromptType {  
+        STRING,
+        NUMBER,
+        YESNO
+    };
 
     export class Style {
         constructor() { };
@@ -37,66 +42,50 @@ namespace Lib.Interface {
 
         public static color(colorString: string): number {
             const colorMap: any = {
-                "red": ColorHues.Red,
-                "orange": ColorHues.Orange,
-                "yellow": ColorHues.Yellow,
-                "green": ColorHues.Green,
-                "aqua": ColorHues.Aqua,
-                "blue": ColorHues.Blue,
-                "purple": ColorHues.Purple,
-                "pink": ColorHues.Pink,
+                "red": Colors.Red,
+                "orange": Colors.Orange,
+                "yellow": Colors.Yellow,
+                "green": Colors.Green,
+                "blue": Colors.Blue,
+                "purple": Colors.Purple,
+                "pink": Colors.Pink,
             };
             if (colorString[0] == '#') {
                 const hex = colorString.replace('#', '');
-                let r = parseInt(hex.slice(0, 2), 16) / 255;
-                let g = parseInt(hex.slice(2, 4), 16) / 255;
-                let b = parseInt(hex.slice(4, 6), 16) / 255;
-
-                let max = Math.max(Math.max(r, g), Math.max(g, b));
-                let min = Math.min(Math.min(r, g), Math.min(g, b));
-                let delta = max - min;
-
-                let hue = 0;
-                if (delta != 0) {
-                    if (max == r) {
-                        hue = (g - b) / delta;
-                    } else if (max == g) {
-                        hue = (b - r) / delta + 2;
-                    } else {
-                        hue = (r - g) / delta + 4;
-                    };
-                    hue = hue * 60;
-                    if (hue < 0) hue += 360;
-                };
-                return hue;
+                let r = parseInt(hex.slice(0, 2), 16);
+                let g = parseInt(hex.slice(2, 4), 16);
+                let b = parseInt(hex.slice(4, 6), 16);
+                return color.rgb(r, g, b);
             };
             if (parseInt(colorString)) {
-                return parseInt(colorString);
+                return parseInt(colorString) * 4;
             };
-            if (colorString.toLowerCase() in colorMap) {
-                return colorMap[colorString.toLowerCase()];
+            if (colorMap[colorString.toLowerCase()]) {
+                return colorMap[colorString.toLowerCase()] * 4;
             };
             return 0;
         };
 
         public static parseBorder(borderString: string): any {
-            /*const borderRegex = /^(\d+px|\d+em|\d+rem|thin|medium|thick)\s+(solid|dashed|dotted|double|groove|ridge|inset|outset)\s+(#[a-fA-F0-9]{3,6}|rgb\(\d{1,3},\d{1,3},\d{1,3}\)|[a-zA-Z]+)$/;
-            let match = OS.rexec(borderRegex, borderString);
-            if (!match) {
+            const borderParts = borderString.split("\s");
+        
+            if (borderParts.length !== 3) {
                 return null;
             };
-            
-            const width = parseFloat(match[1]);
-            const style = match[2];
-            const color = Style.color(match[3]);
-            
+
+            const width = borderParts[0];
+
+            const style = borderParts[1];
+            const validStyles = ['solid', 'dashed', 'dotted', 'double', 'groove', 'ridge', 'inset', 'outset'];
+
+            const color = Style.color(borderParts[2]);
+        
             return {
-                width: width,
-                style: style,
-                color: color
-            };*/
-            return null;
-        };
+                width: parseFloat(width),
+                style,
+                color
+            };
+        };        
     };
 
     export class Element {
@@ -107,23 +96,52 @@ namespace Lib.Interface {
         private tagName: string;
         public x: number = 0;
         public y: number = 0;
+        public wantsToRender: boolean = false;
 
         constructor(tagName: string) {
             this.tagName = tagName;
+            /*control.setInterval(() => {
+                for (const child of this.children) {
+                    if (child.wantsToRender) {
+                        child.wantsToRender = false;
+                        this.wantsToRender = true;
+                    };
+                };
+            }, 500, control.IntervalMode.Interval);*/ // Very unstable! 
         };
 
+        /**
+         * Set an attribute on the element
+         * @param name The attribute name
+         * @param value The value for that attribute
+         */
         public setAttribute(name: string, value: string): void {
             this.attributes[name] = value;
         };
 
+        /**
+         * Gets an attribute
+         * @param name The name of the attribute
+         * @returns { string | undefined }
+         */
         public getAttribute(name: string): string | undefined {
             return this.attributes[name];
         };
 
+        /**
+         * Set a style
+         * @param property The style to set 
+         * @param value The value to set that style to
+         */
         public setStyle(property: string, value: string): void {
             this.styles.set(property, value);
         };
 
+        /**
+         * Get a style
+         * @param property The style to get
+         * @returns { string | undefined }
+         */
         public getStyle(property: string): string | undefined {
             return this.styles.get(property);
         };
@@ -146,6 +164,7 @@ namespace Lib.Interface {
 
         public appendChild(child: Element): void {
             this.children.push(child);
+            this.requestRender();
         };
 
         public getChildren(): Element[] {
@@ -159,12 +178,36 @@ namespace Lib.Interface {
             };
         };
 
+        public clear() {
+            this.children = [];
+        };
+
+        private requestRender() {
+            this.wantsToRender = true;
+        };
+
         public render(screen: Screen, parentX: number = 0, parentY: number = 0): number {
             const posX = parentX + (parseInt(this.getStyle("left") || "0", 10) || this.x);
             const posY = parentY + (parseInt(this.getStyle("top") || "0", 10) || this.y);
             const width = parseInt(this.getStyle("width") || "50", 10);
             const height = parseInt(this.getStyle("height") || "20", 10);
-            let padding = parseInt(this.getStyle("padding") || "0");
+        
+            // Parse padding for all directions
+            const paddingTop = parseInt(this.getStyle("padding-top") || this.getStyle("padding") || "0", 10);
+            const paddingRight = parseInt(this.getStyle("padding-right") || this.getStyle("padding") || "0", 10);
+            const paddingBottom = parseInt(this.getStyle("padding-bottom") || this.getStyle("padding") || "0", 10);
+            const paddingLeft = parseInt(this.getStyle("padding-left") || this.getStyle("padding") || "0", 10);
+        
+            // Parse margin for all directions
+            const marginTop = parseInt(this.getStyle("margin-top") || this.getStyle("margin") || "0", 10);
+            const marginRight = parseInt(this.getStyle("margin-right") || this.getStyle("margin") || "0", 10);
+            const marginBottom = parseInt(this.getStyle("margin-bottom") || this.getStyle("margin") || "0", 10);
+            const marginLeft = parseInt(this.getStyle("margin-left") || this.getStyle("margin") || "0", 10);
+
+            // Gap of children
+            const gapY = parseInt(this.getStyle("gap-y") || this.getStyle("gap") || "0", 10);
+            const gapX = parseInt(this.getStyle("gap-x") || this.getStyle("gap") || "0", 10); 
+        
             const backgroundColor = this.getStyle("background-color");
             const color = this.getStyle("color");
             const cornerRadius = this.getStyle("corner-radius");
@@ -173,33 +216,81 @@ namespace Lib.Interface {
             const borderBottom = Style.parseBorder(this.getStyle("border-bottom"));
             const borderLeft = Style.parseBorder(this.getStyle("border-left"));
             const borderRight = Style.parseBorder(this.getStyle("border-right"));
-
+        
+            // Adjust position based on margin
+            const finalPosX = posX + marginLeft;
+            const finalPosY = posY + marginTop;
+        
             if (border) {
-                screen.fillRect(posX - border.width, posY - border.width, width + border.width, height + border.width, border.color);
+                screen.fillRect(
+                    finalPosX - border.width,
+                    finalPosY - border.width,
+                    width + paddingLeft + paddingRight + border.width,
+                    height + paddingTop + paddingBottom + border.width,
+                    border.color
+                );
             };
-            
+        
             if (cornerRadius) {
-                screen.fillRoundRect(posX, posY, width + padding * 2, height + padding * 2, Style.color(backgroundColor), parseFloat(cornerRadius) || 0);
+                screen.fillRoundRect(
+                    finalPosX,
+                    finalPosY,
+                    width + paddingLeft + paddingRight,
+                    height + paddingTop + paddingBottom,
+                    Style.color(backgroundColor),
+                    parseFloat(cornerRadius) || 0
+                );
             } else {
-                screen.fillRect(posX, posY, width + padding * 2, height + padding * 2, Style.color(backgroundColor));
+                screen.fillRect(
+                    finalPosX,
+                    finalPosY,
+                    width + paddingLeft + paddingRight,
+                    height + paddingTop + paddingBottom,
+                    Style.color(backgroundColor)
+                );
             };
-            
+        
+            let i = 0;
             for (const child of this.children) {
-                padding += child.render(screen, posX + padding, posY + padding);
+                child.render(screen, finalPosX + paddingLeft + gapX * i, finalPosY + paddingTop + gapY * i);
+                i++;
             };
-
+        
             if (this.textContent) {
-                const textColor = parseInt(color || "7");
-                screen.drawText(posX + padding, posY + padding, this.textContent, textColor);
+                const textColor = Style.color(color);
+                screen.drawText(
+                    finalPosX + paddingLeft,
+                    finalPosY + paddingTop,
+                    this.textContent,
+                    textColor
+                );
             };
-
-            return padding;
-        };
+        
+            return paddingTop + paddingBottom + marginTop + marginBottom;
+        }
     };
 
     export class Div extends Element {
         constructor() {
             super("div");
+        };
+    };
+
+    export class List extends Element {
+        constructor() {
+            super("list");
+        };
+    };
+
+    export class ListItem extends Element {
+        constructor() {
+            super("list-item");
+        };
+    };
+
+    export class Text extends Element {
+        constructor() {
+            super("text");
         };
     };
 
@@ -232,30 +323,34 @@ namespace Lib.Interface {
         };
 
         public fillRect(x: number, y: number, width: number, height: number, color: number): void {
-            Distro.addDrawContents(() => { screen.fillRect(x, y, width, height, color); });
+            Distro.addDrawContents(() => {
+                screen.fillRect(x, y, width, height, color);
+            });
         };
 
         public fillRoundRect(x: number, y: number, width: number, height: number, color: number, cornerRadius: number): void {
             Distro.addDrawContents(() => { 
-                screen.fillRect(x, y, cornerRadius, cornerRadius, color);
-                screen.fillRect(x + width - cornerRadius, y, cornerRadius, cornerRadius, color);
-                screen.fillRect(x, y + height - cornerRadius, cornerRadius, cornerRadius, color);
-                screen.fillRect(x + width - cornerRadius, y + height - cornerRadius, cornerRadius, cornerRadius, color);
-                screen.fillRect(x + cornerRadius, y, width - cornerRadius * 2, cornerRadius, color);
-                screen.fillRect(x + cornerRadius, y + height - cornerRadius, width - cornerRadius * 2, cornerRadius, color);
-                screen.fillRect(x, y + cornerRadius, cornerRadius, height - cornerRadius * 2, color);
-                screen.fillRect(x + width - cornerRadius, y + cornerRadius, cornerRadius, height - cornerRadius * 2, color);
+                this.fillRect(x, y, cornerRadius, cornerRadius, color);
+                this.fillRect(x + width - cornerRadius, y, cornerRadius, cornerRadius, color);
+                this.fillRect(x, y + height - cornerRadius, cornerRadius, cornerRadius, color);
+                this.fillRect(x + width - cornerRadius, y + height - cornerRadius, cornerRadius, cornerRadius, color);
+                this.fillRect(x + cornerRadius, y, width - cornerRadius * 2, cornerRadius, color);
+                this.fillRect(x + cornerRadius, y + height - cornerRadius, width - cornerRadius * 2, cornerRadius, color);
+                this.fillRect(x, y + cornerRadius, cornerRadius, height - cornerRadius * 2, color);
+                this.fillRect(x + width - cornerRadius, y + cornerRadius, cornerRadius, height - cornerRadius * 2, color);
             });
         };
 
         public drawLine(x1: number, y1: number, x2: number, y2: number, color: number): void {
             Distro.addDrawContents(() => { 
-                screen.drawLine(x1, y1, x2, y2, color)
+                screen.drawLine(x1, y1, x2, y2, color);
             });
         };
 
         public drawText(x: number, y: number, text: string, color: number): void {
-            Distro.addDrawContents(() => { screen.print(text, x, y, color) });
+            Distro.addDrawContents(() => {
+                screen.print(text, x, y, color);
+            });
         };
     };
 
@@ -265,26 +360,76 @@ namespace Lib.Interface {
         private navigator: Navigator | null = null;
         private screen: Screen | null = null;
 
+        /**
+         * Create a div
+         * @returns { Div }
+         */
         public createDiv(): Div {
             return new Div();
         };
 
+        /**
+         * Create a button
+         * @returns { Div }
+         */
         public createButton(): Button {
             return new Button();
         };
 
+        /**
+         * Create a list
+         * @returns { Div }
+         */
+        public createList(): List {
+            return new List();
+        };
+
+        /**
+         * Create a list item
+         * @returns { Div }
+         */
+        public createListItem(): ListItem {
+            return new ListItem;
+        };
+
+        /**
+         * Create a text
+         * @returns { Div }
+         */
+        public createText(): Text {
+            return new Text;
+        };
+
+        /**
+         * Create a element
+         * @returns { Div }
+         */
         public createElement(tagName: string): Element {
             return new Element(tagName);
         };
 
+        /**
+         * Set the root element
+         * @param root The element
+         */
         public setRootElement(root: Element): void {
             this.root = root;
         };
 
+        /**
+         * Get the root element
+         * @returns { Element }
+         */
         public getRootElement(): Element {
             return this.root;
         };
 
+        /**
+         * Finds an element by an attribute
+         * @param attribute The specific attribute to look for
+         * @param value The value for that attribute
+         * @returns 
+         */
         public querySelector(attribute: string, value: string): Element | null {
             if (!this.root) return null;
 
@@ -300,20 +445,69 @@ namespace Lib.Interface {
             return search(this.root);
         };
 
-
+        /**
+         * Render the document
+         */
         public render(): void {
             Distro.clearDrawContents();
             if (this.root && this.screen) {
                 this.root.render(this.screen);
             };
+            control.setInterval(() => {
+                // if (this.root.wantsToRender && this.screen) {
+                this.root.render(this.screen);
+                //     OS.Debug.run("Rendering DOM");
+                // }; // Fuck this. I just want to render a freaking DOM.
+            }, 500, control.IntervalMode.Interval);
         };
 
+        /**
+         * Sets the screen instance to use
+         * @param screen The screen instance
+         */
         public setScreen(screen: Screen) {
             this.screen = screen;
         };
-
+        
+        /**
+         * Sets the navigator instance to use
+         * @param navigator The navigator to use
+         */
         public setNavigator(navigator: Navigator) {
             this.navigator = navigator;
+        };
+
+        /**
+         * Shows an alert to the screen
+         * @param title The title
+         * @param subtitle The subtitle
+         */
+        public alert(title: string, subtitle?: string) {
+            game.splash(title, subtitle);
+        };
+
+        /**
+         * Ask for a user input
+         * @param question The question to ask
+         * @param type The type of data you are asking for
+         * @param length The expected length
+         * @returns { string }
+         */
+        public prompt(question: string, type: PromptType, length?: number): string {
+            switch (type) {
+                case PromptType.NUMBER: {
+                    return game.askForNumber(question, length || 6).toString();
+                };
+                case PromptType.STRING: {
+                    return game.askForString(question, length || 20);
+                };
+                case PromptType.YESNO: {
+                    return game.ask(question).toString();
+                };
+                default: {
+                    return '';
+                };
+            };
         };
     };
     

@@ -1,18 +1,15 @@
-namespace LED {
+namespace Distro.LED {
     export class StatusLED {
-        private constructor(r: DigitalInOutPin, g: DigitalInOutPin, b: DigitalInOutPin) {
-            this.r = r;
-            this.g = g;
-            this.b = b;
+        private constructor(private r: AnalogInOutPin, private g: AnalogInOutPin, private b: AnalogInOutPin) {}
+
+        public setColor(rValue: number, gValue: number, bValue: number): void {
+            this.r.analogWrite(rValue); // Red channel
+            this.g.analogWrite(gValue); // Green channel
+            this.b.analogWrite(bValue); // Blue channel
         };
-        public setColor(color: color) {
-            
-        };
-        private r: DigitalInOutPin;
-        private g: DigitalInOutPin;
-        private b: DigitalInOutPin;
-        public static instance() {
-            return new this(pins.pinByCfg(DAL.CFG_PIN_LED_R), pins.pinByCfg(DAL.CFG_PIN_LED_G), pins.pinByCfg(DAL.CFG_PIN_LED_B));
+
+        static instance() {
+            // ???
         };
     };
 };

@@ -1,7 +1,9 @@
+/*
+ * Deprecated
+ */
+
 namespace Distro.Net {
     export enum CommandType {
-        HELLO = 0x1,
-        RESOLVE = 0x2,
         GET = 0x3,
         SEND = 0x4
     };
